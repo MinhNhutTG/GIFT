@@ -170,7 +170,8 @@ body {
   flex-direction: column;
   gap: 12px;
   background: linear-gradient(180deg, #fff, #fff8fb);
-  overflow-y: auto; /* ✅ Cho phép cuộn nếu nội dung vượt chiều cao */
+  overflow-y: auto;
+  /* ✅ Cho phép cuộn nếu nội dung vượt chiều cao */
   scrollbar-width: thin;
   scrollbar-color: var(--accent-dark) transparent;
   background-color: red;
@@ -358,8 +359,15 @@ body {
   .message-text {
     min-height: 72px
   }
-  .inside-layout{
+
+  .inside-layout {
     padding: 30px 0px !important;
+  }
+
+  :root {
+
+    --h: 600px;
+
   }
 }
 
