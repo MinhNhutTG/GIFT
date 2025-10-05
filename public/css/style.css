@@ -17,14 +17,18 @@
 /* ========== Reset & base ========== */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{
+body {
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-  background: linear-gradient(180deg,#fffafc,#fff0f6);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  color:#111;
-  display:flex;align-items:center;justify-content:center;
-  min-height:100vh;overflow:hidden;padding:28px;
+  background: linear-gradient(180deg, #fffafc, #fff0f6);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #111;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 100vh;
+  overflow-y: auto;
+  padding: 20px 14px;
 }
 
 /* Ambient background lighting */
@@ -75,7 +79,8 @@ body{
 }
 /* INSIDE face */
 .card-inside{
-  transform:rotateY(180deg);padding:18px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,#fff,#fff8fb);
+  height: 120vh;
+  transform:rotateY(180deg);padding:18px 10px !important ;display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,#fff,#fff8fb);
 }
 
 /* inside layout */
