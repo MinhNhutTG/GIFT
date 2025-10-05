@@ -71,8 +71,7 @@
 
         // Phát nhạc ngay khi mở thiệp
         try {
-            video.play();
-            video.muted = true;
+            
             bgMusic.volume = 0;
             bgMusic.play().catch(() => { });
             const fadeIn = setInterval(() => {
