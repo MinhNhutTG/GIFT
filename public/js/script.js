@@ -71,6 +71,8 @@
 
         // Phát nhạc ngay khi mở thiệp
         try {
+            video.play();
+            video.muted = true;
             bgMusic.volume = 0;
             bgMusic.play().catch(() => { });
             const fadeIn = setInterval(() => {
@@ -218,3 +220,59 @@
     window.openCard = openCard;
 
 })();
+
+
+
+// 
+// ========== HIỆU ỨNG TRÁI TIM ==========
+const canvas = document.getElementById("hearts-canvas");
+const ctx = canvas.getContext("2d");
+let hearts = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+function spawnHeart() {
+  for (let i = 0; i < 10; i++) {
+    hearts.push({
+      x: Math.random() * canvas.width,
+      y: canvas.height + 20,
+      size: 10 + Math.random() * 20,
+      speed: 1 + Math.random() * 2,
+      alpha: 1,
+      drift: (Math.random() - 0.5) * 2
+    });
+  }
+}
+
+function drawHearts() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < hearts.length; i++) {
+    const h = hearts[i];
+    ctx.save();
+    ctx.globalAlpha = h.alpha;
+    ctx.fillStyle = "#ff6b9a";
+    ctx.beginPath();
+    // Vẽ trái tim nhỏ
+    const x = h.x, y = h.y, s = h.size;
+    ctx.moveTo(x, y);
+    ctx.bezierCurveTo(x - s/2, y - s/2, x - s, y + s/3, x, y + s);
+    ctx.bezierCurveTo(x + s, y + s/3, x + s/2, y - s/2, x, y);
+    ctx.fill();
+    ctx.restore();
+    // cập nhật vị trí
+    h.y -= h.speed;
+    h.x += h.drift;
+    h.alpha -= 0.01;
+  }
+  hearts = hearts.filter(h => h.alpha > 0);
+  requestAnimationFrame(drawHearts);
+}
+drawHearts();
+
+
+
