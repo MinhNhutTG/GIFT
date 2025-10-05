@@ -51,7 +51,7 @@
     function startHearts() {
         if (heartInterval) return;
         heartInterval = setInterval(spawnHeart, 260);
-        setTimeout(stopHearts, 7000);
+        setTimeout(stopHearts, 120000);
     }
     function stopHearts() {
         clearInterval(heartInterval);
