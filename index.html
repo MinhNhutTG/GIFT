@@ -1,108 +1,409 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Bảng tên hạt động — Canvas Particles</title>
-  <style>
-    body {
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: radial-gradient(circle at center, #1a1a1a, #000);
-      overflow: hidden;
-    }
-    canvas {
-      background: transparent;
-      cursor: none;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Album Polaroid — Memory Album</title>
+<style>
+  :root{
+    --bg:#fff6f8;
+    --card:#fff;
+    --accent:#ff6b81;
+    --muted:#7a7a85;
+    --shadow: 0 10px 30px rgba(0,0,0,0.12);
+    --radius:12px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: radial-gradient(circle at 10% 10%, #fff6f8 0%, #fff 40%, #ffeef4 100%);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color:var(--muted);
+    padding:24px;
+  }
+
+  /* Album wrapper */
+  .album {
+    width: min(980px, 96vw);
+    max-width:980px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,250,250,0.95));
+    border-radius:16px;
+    padding:28px;
+    box-shadow: var(--shadow);
+    position:relative;
+    overflow:visible;
+  }
+
+  .header {
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:18px;
+  }
+  .title {
+    font-size:20px;
+    font-weight:600;
+    color:#333;
+  }
+  .subtitle {
+    font-size:13px;
+    color:#8a8a95;
+  }
+
+  /* Cover button (open/close album) */
+  #coverBtn{
+    margin-left:auto;
+    border:0;
+    background:linear-gradient(180deg,var(--accent),#ff486b);
+    color:white;
+    padding:10px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    box-shadow: 0 6px 18px rgba(255,80,120,0.18);
+    font-weight:600;
+  }
+  #coverBtn:focus{outline:3px solid rgba(255,107,154,0.25)}
+
+  /* Stack area */
+  .stack {
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+    justify-content:center;
+    flex-wrap:wrap;
+    padding:8px;
+  }
+
+  /* Polaroid card */
+  .polaroid {
+    width:220px;
+    background:var(--card);
+    border-radius:10px;
+    padding:12px 12px 18px 12px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.10);
+    transform: rotate(var(--r, 0deg)) translateY(var(--y,0px));
+    transition: transform .45s cubic-bezier(.2,.9,.3,1), box-shadow .25s;
+    cursor: pointer;
+    user-select:none;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .polaroid:focus{outline: 3px solid rgba(255,107,154,0.18)}
+  .polaroid:hover{transform: translateY(-8px) scale(1.02); box-shadow: 0 16px 36px rgba(0,0,0,0.16)}
+
+  .polaroid img{
+    width:100%;
+    height:140px;
+    object-fit:cover;
+    border-radius:6px;
+    display:block;
+    background:linear-gradient(180deg,#ffeef4,#fff0f4);
+  }
+  .caption {
+    margin-top:10px;
+    font-size:14px;
+    color:#5b5b63;
+    text-align:center;
+    line-height:1.3;
+  }
+
+  /* Small helper label */
+  .hint {
+    font-size:12px;
+    color:#9b9b9f;
+    margin-top:8px;
+    text-align:center;
+  }
+
+  /* Overlay for zoomed photo */
+  #overlay{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:1200;
+  }
+  #overlay.visible{display:flex}
+  .overlay-bg{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.44);
+    backdrop-filter: blur(2px);
+  }
+  .zoom-card{
+    position:relative;
+    z-index:2;
+    max-width:min(920px, 92vw);
+    width: min(820px, 92vw);
+    border-radius:12px;
+    overflow:hidden;
+    background:var(--card);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.36);
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    animation: pop .18s ease;
+  }
+  @keyframes pop{from{transform:scale(.98);opacity:.6}to{transform:scale(1);opacity:1}}
+  .zoom-card img{width:100%;height:auto;display:block;object-fit:cover}
+  .zoom-caption{
+    padding:14px 16px;
+    color:#333;
+    font-size:16px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,250,250,1));
+  }
+
+  /* Close button */
+  .closeBtn{
+    position:absolute;
+    right:12px;
+    top:12px;
+    z-index:3;
+    border:0;
+    background:rgba(255,255,255,0.85);
+    border-radius:10px;
+    padding:8px;
+    cursor:pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  }
+  .closeBtn:focus{outline:3px solid rgba(255,107,154,0.18)}
+
+  /* Responsive */
+  @media (max-width:640px){
+    .polaroid{width:160px}
+    .polaroid img{height:110px}
+    #coverBtn{padding:8px 10px}
+  }
+</style>
 </head>
 <body>
-  <canvas id="canvas" width="900" height="400"></canvas>
 
-  <script>
-    // --- Khởi tạo ---
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    const W = canvas.width;
-    const H = canvas.height;
+<div class="album" id="album">
+  <div class="header">
+    <div>
+      <div class="title">Album Kỷ Niệm</div>
+      <div class="subtitle">Chạm vào ảnh để phóng to — Nhấn ESC hoặc X để đóng</div>
+    </div>
+    <button id="coverBtn" aria-pressed="false">Mở album</button>
+  </div>
 
-    const text = "Minh Nhựt"; // ← Bạn có thể đổi thành tên bạn
-    const particles = [];
+  <div class="stack" id="stack">
+    <!-- Thay src ảnh & caption tuỳ ý -->
+    <figure class="polaroid" tabindex="0" data-caption="Khoảnh khắc đôi ta ở biển" style="--r:-6deg; --y:4px">
+      <img src="https://picsum.photos/seed/1/800/600" alt="Ảnh 1">
+      <figcaption class="caption">Khoảnh khắc đôi ta ở biển</figcaption>
+    </figure>
 
-    // --- Bước 1: Vẽ chữ lên canvas ẩn để lấy pixel ---
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 120px 'Poppins', sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText(text, W / 2, H / 2 + 40);
+    <figure class="polaroid" tabindex="0" data-caption="Ngày mưa, tay nắm tay" style="--r:4deg; --y:0px">
+      <img src="https://picsum.photos/seed/2/800/600" alt="Ảnh 2">
+      <figcaption class="caption">Ngày mưa, tay nắm tay</figcaption>
+    </figure>
 
-    // Lấy dữ liệu pixel của chữ
-    const imageData = ctx.getImageData(0, 0, W, H);
-    ctx.clearRect(0, 0, W, H); // xoá chữ thật
+    <figure class="polaroid" tabindex="0" data-caption="Một buổi chiều thảnh thơi" style="--r:-2deg; --y:6px">
+      <img src="https://picsum.photos/seed/3/800/600" alt="Ảnh 3">
+      <figcaption class="caption">Một buổi chiều thảnh thơi</figcaption>
+    </figure>
 
-    // --- Bước 2: Quét pixel để tạo hạt ---
-    for (let y = 0; y < H; y += 4) {     // bước càng nhỏ -> càng nhiều hạt
-      for (let x = 0; x < W; x += 4) {
-        const index = (y * W + x) * 4 + 3; // kênh alpha (độ trong suốt)
-        if (imageData.data[index] > 128) { // nếu pixel có màu (trong vùng chữ)
-          particles.push({
-            x: Math.random() * W,   // vị trí ban đầu ngẫu nhiên
-            y: Math.random() * H,
-            tx: x, ty: y,           // vị trí mục tiêu (pixel chữ)
-            vx: 0, vy: 0,           // vận tốc ban đầu
-            color: `hsl(${x / 3}, 80%, 70%)` // màu gradient theo toạ độ
-          });
-        }
-      }
+    <figure class="polaroid" tabindex="0" data-caption="Nụ cười em là màu nắng" style="--r:2deg; --y:-2px">
+      <img src="https://picsum.photos/seed/4/800/600" alt="Ảnh 4">
+      <figcaption class="caption">Nụ cười em là màu nắng</figcaption>
+    </figure>
+      <figure class="polaroid" tabindex="0" data-caption="Một buổi chiều thảnh thơi" style="--r:-2deg; --y:6px">
+      <img src="https://picsum.photos/seed/3/800/600" alt="Ảnh 3">
+      <figcaption class="caption">Một buổi chiều thảnh thơi</figcaption>
+    </figure>
+
+    <figure class="polaroid" tabindex="0" data-caption="Nụ cười em là màu nắng" style="--r:2deg; --y:-2px">
+      <img src="https://picsum.photos/seed/4/800/600" alt="Ảnh 4">
+      <figcaption class="caption">Nụ cười em là màu nắng</figcaption>
+    </figure>
+      <figure class="polaroid" tabindex="0" data-caption="Một buổi chiều thảnh thơi" style="--r:-2deg; --y:6px">
+      <img src="https://picsum.photos/seed/3/800/600" alt="Ảnh 3">
+      <figcaption class="caption">Một buổi chiều thảnh thơi</figcaption>
+    </figure>
+
+    <figure class="polaroid" tabindex="0" data-caption="Nụ cười em là màu nắng" style="--r:2deg; --y:-2px">
+      <img src="https://picsum.photos/seed/4/800/600" alt="Ảnh 4">
+      <figcaption class="caption">Nụ cười em là màu nắng</figcaption>
+    </figure>
+  </div>
+
+  <div class="hint">Gợi ý: dùng Tab để điều hướng, Enter/Space để phóng to</div>
+</div>
+
+<!-- Overlay (tạo sẵn, JS sẽ điều khiển) -->
+<div id="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="overlay-bg" data-close></div>
+  <div class="zoom-card" role="document" aria-label="Ảnh phóng to">
+    <button class="closeBtn" id="closeBtn" aria-label="Đóng (X)">✕</button>
+    <!-- Nội dung sẽ được chèn bởi JS -->
+  </div>
+</div>
+
+<script>
+/* ======= JS: hoạt động chỉnh chu, xử lý lỗi cẩn thận ======= */
+
+(function(){
+  const coverBtn = document.getElementById('coverBtn');
+  const album = document.getElementById('album');
+  const stack = document.getElementById('stack');
+  const polaroids = Array.from(document.querySelectorAll('.polaroid'));
+  const overlay = document.getElementById('overlay');
+  const overlayBg = overlay.querySelector('.overlay-bg');
+  const zoomCard = overlay.querySelector('.zoom-card');
+  const closeBtn = document.getElementById('closeBtn');
+
+  let albumOpen = false;
+  let currentDisplayed = null;
+
+  // Toggle album open/close
+  function toggleAlbum(){
+    albumOpen = !albumOpen;
+    coverBtn.setAttribute('aria-pressed', String(albumOpen));
+    coverBtn.textContent = albumOpen ? 'Đóng album' : 'Mở album';
+    if(albumOpen){
+      album.classList.add('open');
+      // subtle: slightly spread photos when open
+      polaroids.forEach((p, i) => {
+        p.style.transitionDelay = `${i * 60}ms`;
+        p.style.transform = `translateY(0) rotate(${(Math.random()*6 - 3).toFixed(2)}deg)`;
+      });
+      // focus first card for accessibility
+      setTimeout(()=> {
+        const first = polaroids[0];
+        if(first) first.focus();
+      }, 220);
+    }else{
+      album.classList.remove('open');
+      polaroids.forEach((p,i)=>{
+        p.style.transitionDelay = '';
+        // restore original CSS vars (if any)
+        p.style.transform = '';
+      });
     }
+  }
 
-    // --- Bước 3: Xử lý chuột ---
-    const mouse = { x: 0, y: 0 };
-    canvas.addEventListener('mousemove', e => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
+  coverBtn.addEventListener('click', toggleAlbum);
+  coverBtn.addEventListener('keydown', (ev) => {
+    if(ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggleAlbum(); }
+  });
+
+  // Open zoom overlay for a polaroid (safe: clone image src & caption)
+  function openZoom(photoEl){
+    if(!photoEl) return;
+    // prevent repeat
+    if(currentDisplayed) return;
+    const img = photoEl.querySelector('img');
+    const caption = photoEl.getAttribute('data-caption') || (photoEl.querySelector('.caption')?.textContent ?? '');
+    if(!img) return;
+
+    // Build zoom content
+    // Remove any prior content (defensive)
+    while(zoomCard.firstChild){ zoomCard.removeChild(zoomCard.firstChild); }
+    // re-add close button (keep accessible)
+    zoomCard.appendChild(closeBtn);
+
+    const bigImg = document.createElement('img');
+    bigImg.src = img.src;
+    bigImg.alt = img.alt || caption || 'Ảnh';
+    bigImg.loading = 'eager';
+
+    const cap = document.createElement('div');
+    cap.className = 'zoom-caption';
+    cap.textContent = caption;
+
+    zoomCard.appendChild(bigImg);
+    zoomCard.appendChild(cap);
+
+    overlay.classList.add('visible');
+    overlay.setAttribute('aria-hidden','false');
+
+    // Focus close button for keyboard users
+    setTimeout(()=> closeBtn.focus(), 60);
+
+    currentDisplayed = photoEl;
+  }
+
+  function closeZoom(){
+    if(!currentDisplayed) return;
+    overlay.classList.remove('visible');
+    overlay.setAttribute('aria-hidden','true');
+    // clear zoom content (keeps close button element for reuse)
+    setTimeout(()=> {
+      // remove everything except closeBtn
+      while(zoomCard.childNodes.length > 1){ zoomCard.removeChild(zoomCard.lastChild); }
+    }, 220);
+    currentDisplayed = null;
+  }
+
+  // Click / keyboard on each polaroid
+  polaroids.forEach(p => {
+    p.addEventListener('click', (e) => {
+      // if album closed, open album first then zoom after short delay
+      if(!albumOpen){
+        toggleAlbum();
+        setTimeout(()=> openZoom(p), 300);
+      } else {
+        openZoom(p);
+      }
     });
 
-    // --- Bước 4: Animation ---
-    function animate() {
-      ctx.clearRect(0, 0, W, H);
-
-      for (let p of particles) {
-        // Lực hút về vị trí chữ
-        let dx = p.tx - p.x;
-        let dy = p.ty - p.y;
-        p.vx += dx * 0.02;
-        p.vy += dy * 0.02;
-
-        // Lực đẩy khi gần chuột
-        let mx = p.x - mouse.x;
-        let my = p.y - mouse.y;
-        let dist = Math.sqrt(mx * mx + my * my);
-        if (dist < 80) {
-          p.vx += mx * 0.3;
-          p.vy += my * 0.3;
-        }
-
-        // Giảm tốc và cập nhật vị trí
-        p.vx *= 0.9;
-        p.vy *= 0.9;
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // Vẽ hạt
-        ctx.beginPath();
-        ctx.fillStyle = p.color;
-        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-        ctx.fill();
+    p.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        p.click();
       }
+    });
+  });
 
-      requestAnimationFrame(animate);
+  // Overlay interactions
+  overlayBg.addEventListener('click', closeZoom);
+  closeBtn.addEventListener('click', closeZoom);
+
+  // close with ESC
+  window.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      if(currentDisplayed) closeZoom();
+      else if(albumOpen) toggleAlbum();
     }
+  });
 
-    animate();
-  </script>
+  // Defensive: if image fails to load, show fallback caption background
+  document.querySelectorAll('.polaroid img').forEach(img => {
+    img.addEventListener('error', () => {
+      img.style.display = 'none';
+      const parent = img.closest('.polaroid');
+      if(parent){
+        // create simple fallback box
+        const box = document.createElement('div');
+        box.style.background = 'linear-gradient(180deg,#fff7f8,#fff0f4)';
+        box.style.height = '140px';
+        box.style.display = 'flex';
+        box.style.alignItems = 'center';
+        box.style.justifyContent = 'center';
+        box.style.color = '#c65a78';
+        box.style.fontWeight = 600;
+        box.textContent = 'Ảnh không tải được';
+        parent.insertBefore(box, img);
+      }
+    });
+  });
+
+  // Accessibility: prevent accidental drag
+  document.addEventListener('dragstart', (e)=> e.preventDefault());
+
+  // Init: ensure album closed at start
+  album.classList.remove('open');
+  overlay.setAttribute('aria-hidden','true');
+
+})();
+</script>
 </body>
 </html>
