@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Bảng tên hạt động — Canvas Particles</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: radial-gradient(circle at center, #1a1a1a, #000);
+      overflow: hidden;
+    }
+    canvas {
+      background: transparent;
+      cursor: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="900" height="400"></canvas>
+
+  <script>
+    // --- Khởi tạo ---
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width;
+    const H = canvas.height;
+
+    const text = "Minh Nhựt"; // ← Bạn có thể đổi thành tên bạn
+    const particles = [];
+
+    // --- Bước 1: Vẽ chữ lên canvas ẩn để lấy pixel ---
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 120px 'Poppins', sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(text, W / 2, H / 2 + 40);
+
+    // Lấy dữ liệu pixel của chữ
+    const imageData = ctx.getImageData(0, 0, W, H);
+    ctx.clearRect(0, 0, W, H); // xoá chữ thật
+
+    // --- Bước 2: Quét pixel để tạo hạt ---
+    for (let y = 0; y < H; y += 4) {     // bước càng nhỏ -> càng nhiều hạt
+      for (let x = 0; x < W; x += 4) {
+        const index = (y * W + x) * 4 + 3; // kênh alpha (độ trong suốt)
+        if (imageData.data[index] > 128) { // nếu pixel có màu (trong vùng chữ)
+          particles.push({
+            x: Math.random() * W,   // vị trí ban đầu ngẫu nhiên
+            y: Math.random() * H,
+            tx: x, ty: y,           // vị trí mục tiêu (pixel chữ)
+            vx: 0, vy: 0,           // vận tốc ban đầu
+            color: `hsl(${x / 3}, 80%, 70%)` // màu gradient theo toạ độ
+          });
+        }
+      }
+    }
+
+    // --- Bước 3: Xử lý chuột ---
+    const mouse = { x: 0, y: 0 };
+    canvas.addEventListener('mousemove', e => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    });
+
+    // --- Bước 4: Animation ---
+    function animate() {
+      ctx.clearRect(0, 0, W, H);
+
+      for (let p of particles) {
+        // Lực hút về vị trí chữ
+        let dx = p.tx - p.x;
+        let dy = p.ty - p.y;
+        p.vx += dx * 0.02;
+        p.vy += dy * 0.02;
+
+        // Lực đẩy khi gần chuột
+        let mx = p.x - mouse.x;
+        let my = p.y - mouse.y;
+        let dist = Math.sqrt(mx * mx + my * my);
+        if (dist < 80) {
+          p.vx += mx * 0.3;
+          p.vy += my * 0.3;
+        }
+
+        // Giảm tốc và cập nhật vị trí
+        p.vx *= 0.9;
+        p.vy *= 0.9;
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Vẽ hạt
+        ctx.beginPath();
+        ctx.fillStyle = p.color;
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
