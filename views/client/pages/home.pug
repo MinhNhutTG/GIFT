@@ -47,13 +47,12 @@ html(lang="vi")
       }
 
       .sample-item {
-        display: flex;
-        align-items: center;
         background: #ffe6f2;
         padding: 15px 20px;
         border-radius: 15px;
         margin-bottom: 15px;
       }
+
 
       .sample-item video {
         width: 220px;
@@ -65,8 +64,14 @@ html(lang="vi")
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       }
 
-      .sample-item strong {
-        color: #e91e63;
+      .sample-item video {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 15px;
+        margin-right: 20px;
+        border: 3px solid #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       }
 
       .btn-love {
@@ -132,14 +137,14 @@ html(lang="vi")
         hr
         // Sample list
         each val in [1,2,3]
-          .sample-item
+          .sample-item.d-flex.flex-lg-row.flex-column.align-items-center.text-center.text-lg-start
             video(controls)
               source(src=`https://giftlove-bucket.s3.ap-southeast-2.amazonaws.com/Video/7103026917059.mp4`, type="video/mp4")
               | Video không hỗ trợ
-            .flex-grow-1
-              strong Mẫu #{val}
+            .flex-grow-1.mt-3.mt-lg-0.ms-lg-3
+              strong.text-danger Mẫu #{val}
               p.mb-0.text-muted Video demo thư tình #{val}
-            button.btn.btn-love.ms-3(type="button") Tạo
+            button.btn.btn-love.mt-3.mt-lg-0.ms-lg-3(type="button") Tạo
 
     // Footer
     footer
