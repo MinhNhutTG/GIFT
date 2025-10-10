@@ -1,4 +1,13 @@
 // [GET] /admin/dashboard
-module.exports.index = (req, res) => {
-    res.render("./client/pages/home.pug");
+const Template = require("../../models/template.model");
+
+module.exports.index = async (req, res) => {
+    let find = { isActive: true };
+    const templates = await Template.find(find);
+    console.log(templates);
+    res.render("./client/pages/home.pug",
+    {
+        templates: templates
+    }
+    );
 }
