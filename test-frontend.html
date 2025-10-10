@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Ghim Tình Yêu</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #fff5f7;
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #ff5d8f;
+            margin: 20px;
+            text-shadow: 1px 1px 2px #ffb6c1;
+        }
+
+        .board-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pinboard {
+            position: relative;
+            width: 700px;
+            height: 450px;
+            background-color: #ffebef;
+            border: 10px solid #ffb6c1;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(255, 100, 150, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .pin {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .pin img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 3px solid white;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .pin:hover {
+            transform: scale(1.1) rotate(0deg);
+            z-index: 10;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .pin-heart {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            color: #ff5d8f;
+        }
+
+        #addBtn {
+            background-color: #ff5d8f;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 8px rgba(255, 100, 150, 0.3);
+        }
+
+        #addBtn:hover {
+            background-color: #ff7ba1;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="board-container">
+        <h1>💌 Bảng Ghim Tình Yêu 💞</h1>
+        <div class="pinboard" id="pinboard">
+            <!-- Mỗi tấm ảnh ghim -->
+            <div class="pin" style="top: 40px; left: 60px; transform: rotate(-5deg);">
+                <img src="./public//image/cat.png" alt="Ảnh 1">
+                <div class="pin-heart">❤️</div>
+            </div>
+            <div class="pin" style="top: 160px; left: 200px; transform: rotate(4deg);">
+                <img src="./public//image/cat.png" alt="Ảnh 2">
+                <div class="pin-heart">💖</div>
+            </div>
+            <div class="pin" style="top: 100px; left: 380px; transform: rotate(-3deg);">
+                <img src="./public//image/cat.png" alt="Ảnh 3">
+                <div class="pin-heart">💕</div>
+            </div>
+            <div class="pin" style="top: 240px; left: 100px; transform: rotate(2deg);">
+                <img src="./public//image/cat.png" alt="Ảnh 4">
+                <div class="pin-heart">💓</div>
+            </div>
+        </div>
+        <button id="addBtn">+ Thêm ảnh</button>
+    </div>
+
+    <script >
+        const board = document.getElementById("pinboard");
+const addBtn = document.getElementById("addBtn");
+
+// Danh sách ảnh tình yêu mẫu
+const loveImages = [
+  "https://i.imgur.com/CXYjzvD.png",
+  "https://i.imgur.com/lvZC7db.png",
+  "https://i.imgur.com/tZ5cnBd.png",
+  "https://i.imgur.com/rbMYQje.png",
+  "https://i.imgur.com/bA6oLLh.png"
+];
+
+addBtn.addEventListener("click", () => {
+  const img = document.createElement("div");
+  img.classList.add("pin");
+
+  const randomImg = loveImages[Math.floor(Math.random() * loveImages.length)];
+  const randomX = Math.random() * 550 + 50;
+  const randomY = Math.random() * 320 + 30;
+  const randomRot = Math.random() * 10 - 5;
+  const hearts = ["💖", "💕", "❤️", "💓", "💗"];
+  const heart = hearts[Math.floor(Math.random() * hearts.length)];
+
+  img.style.top = `${randomY}px`;
+  img.style.left = `${randomX}px`;
+  img.style.transform = `rotate(${randomRot}deg)`;
+
+  img.innerHTML = `<img src="${randomImg}" alt="Love"><div class="pin-heart">${heart}</div>`;
+  board.appendChild(img);
+});
+
+    </script>
+</body>
+
+</html>

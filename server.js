@@ -2,6 +2,7 @@ const express = require('express')
 const path = require("path");
 const uploadRoutes = require("./routes/uploadRoutes");
 const database = require("./config/database")
+const route = require("./routes/client/index.router");
 require('dotenv').config()
 
 
@@ -16,9 +17,6 @@ const port = process.env.PORT || 3000
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
 
 app.get("/gift", (req, res) => {
   res.render("gift");
@@ -31,6 +29,8 @@ app.get("/form", (req, res) => {
 });
 
 app.use("/api/upload", uploadRoutes);
+
+route(app);
 
 app.use(express.static(`${__dirname}/public`));
 
