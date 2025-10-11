@@ -1,0 +1,289 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title G&#x1EED;i Em Y&ecirc;u &#x1F48C;
+  style.
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@400;500&display=swap');
+    body {
+    font-family: "Quicksand", "Nunito", "Comic Neue", sans-serif;
+    background: linear-gradient(180deg, #ffb4e7, #ffb4e7);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    }
+    /* --- CARD NGOÀI --- */
+    .radio-card {
+    width: 90%;
+    max-width: 700px;
+    background: #fff0f6;
+    border-radius: 30px;
+    box-shadow:
+    10px 10px 20px rgba(255, 180, 220, 0.908),
+    -5px -5px 20px rgba(255, 180, 220, 0.908);
+    padding: 25px;
+    text-align: center;
+    position: relative;
+    transition: all 0.4s ease;
+    }
+    .radio-card:hover {
+    transform: translateY(-5px);
+    box-shadow:
+    5px 5px 15px rgba(255, 180, 220, 0.4),
+    -5px -5px 15px rgba(255, 255, 255, 0.9);
+    }
+    /* --- TIÊU ĐỀ --- */
+    .title {
+    font-family: "Dancing Script", cursive;
+    color: #ff4da6;
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+    margin-top: 0px;
+    }
+    /* --- NÚT ĐÈN RADIO --- */
+    .top-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    }
+    .circle {
+    width: 35px;
+    height: 35px;
+    background: #ff4da6;
+    border-radius: 50%;
+    box-shadow:
+    inset 2px 2px 4px rgba(255, 0, 150, 0.3),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.8);
+    }
+    .bar {
+    width: 8px;
+    height: 28px;
+    background: #ff4da6;
+    border-radius: 5px;
+    box-shadow:
+    inset 2px 2px 4px rgba(255, 0, 150, 0.3),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.8);
+    }
+    /* --- KHUNG LỜI CHÚC --- */
+    ::-webkit-scrollbar {
+    width: 8px;
+    /* độ rộng thanh cuộn dọc */
+    height: 8px;
+    /* độ cao thanh cuộn ngang (nếu có) */
+    }
+    ::-webkit-scrollbar-track {
+    background: #ffe6f7;
+    /* màu nền rãnh cuộn */
+    border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ff80b5, #ff4da6);
+    border-radius: 10px;
+    box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.6);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #ff66a8, #ff3399);
+    }
+    /* Firefox */
+    * {
+    scrollbar-width: thin;
+    scrollbar-color: #ff99cc #ffe6f7;
+    }
+    .message-box {
+    font-style: italic;
+    width: 95%;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow:
+    inset 2px 2px 4px rgba(255, 0, 150, 0.3),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.8);
+    color: #ff4da6;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    text-align: left;
+    padding: 10px 10px;
+    max-height: 150px;
+    /* bạn có thể chỉnh cao hơn hoặc thấp hơn */
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    }
+    /* --- VIDEO BOX --- */
+    .video-box {
+    width: 100%;
+    border-radius: 20px;
+    background-color: #000;
+    overflow: hidden;
+    box-shadow:
+    5px 5px 15px rgba(255, 190, 220, 0.4),
+    -5px -5px 15px rgba(255, 255, 255, 0.9);
+    }
+    video {
+    width: 100%;
+    height: 300px;
+    display: block;
+    border-radius: 20px;
+    }
+    /* --- NÚT PHÁT / DỪNG --- */
+    .controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    }
+    .btn {
+    background: #fff0f6;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #ff4da6;
+    box-shadow:
+    4px 4px 8px rgba(255, 170, 200, 0.4),
+    -4px -4px 8px rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    }
+    .btn:hover {
+    box-shadow:
+    inset 2px 2px 4px rgba(255, 180, 200, 0.4),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.9);
+    background: #ffe6f7;
+    }
+    /* --- NỐT NHẠC BAY --- */
+    .note {
+    position: absolute;
+    font-size: 1.5rem;
+    color: #ff66b2;
+    animation: floatNotes 4s linear forwards;
+    pointer-events: none;
+    }
+    @keyframes floatNotes {
+    0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+    }
+    20% {
+    opacity: 1;
+    }
+    100% {
+    opacity: 0;
+    transform: translateY(-200px) scale(1.2) rotate(20deg);
+    }
+    }
+    /* --- RESPONSIVE --- */
+    @media (max-width: 600px) {
+    .radio-card {
+    padding: 15px;
+    border-radius: 20px;
+    }
+    .title {
+    font-size: 1.8rem;
+    }
+    .circle {
+    width: 25px;
+    height: 25px;
+    }
+    .bar {
+    width: 6px;
+    height: 18px;
+    }
+    .btn {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+    }
+    }
+.radio-card
+  .top-controls
+    .circle
+    .bar
+    .bar
+    .bar
+    .bar
+    .circle
+  h2.title G&#x1EED;i em &#x1F496;
+  #message.message-box
+    | G&#x1EED;i em y&ecirc;u &#x1F48C; 
+    br
+    |             Anh ch&#x1EC9; mu&#x1ED1;n n&oacute;i... Em l&agrave; b&#x1EA3;n nh&#x1EA1;c ng&#x1ECD;t ng&agrave;o nh&#x1EA5;t trong cu&#x1ED9;c &dstrok;&#x1EDD;i anh &#x1F497;
+    |             Em &agrave;, n&#x1EBF;u c&oacute; m&#x1ED9;t &dstrok;i&#x1EC1;u anh mu&#x1ED1;n gi&#x1EEF; m&atilde;i tr&ecirc;n &dstrok;&#x1EDD;i, th&igrave; &dstrok;&oacute; ch&iacute;nh l&agrave; n&#x1EE5; c&#x1B0;&#x1EDD;i c&#x1EE7;a em. V&igrave; m&#x1ED7;i khi em c&#x1B0;&#x1EDD;i, c&#x1EA3; th&#x1EBF;
+    |             gi&#x1EDB;i trong anh &dstrok;&#x1EC1;u s&aacute;ng l&ecirc;n.
+    |             G&#x1EED;i em y&ecirc;u &#x1F48C; 
+    br
+    |             Anh ch&#x1EC9; mu&#x1ED1;n n&oacute;i... Em l&agrave; b&#x1EA3;n nh&#x1EA1;c ng&#x1ECD;t ng&agrave;o nh&#x1EA5;t trong cu&#x1ED9;c &dstrok;&#x1EDD;i anh &#x1F497;
+    |             Em &agrave;, n&#x1EBF;u c&oacute; m&#x1ED9;t &dstrok;i&#x1EC1;u anh mu&#x1ED1;n gi&#x1EEF; m&atilde;i tr&ecirc;n &dstrok;&#x1EDD;i, th&igrave; &dstrok;&oacute; ch&iacute;nh l&agrave; n&#x1EE5; c&#x1B0;&#x1EDD;i c&#x1EE7;a em. V&igrave; m&#x1ED7;i khi em c&#x1B0;&#x1EDD;i, c&#x1EA3; th&#x1EBF;
+    |             gi&#x1EDB;i trong anh &dstrok;&#x1EC1;u s&aacute;ng l&ecirc;n.
+    |             G&#x1EED;i em y&ecirc;u &#x1F48C; 
+    br
+    |             Anh ch&#x1EC9; mu&#x1ED1;n n&oacute;i... Em l&agrave; b&#x1EA3;n nh&#x1EA1;c ng&#x1ECD;t ng&agrave;o nh&#x1EA5;t trong cu&#x1ED9;c &dstrok;&#x1EDD;i anh &#x1F497;
+    |             Em &agrave;, n&#x1EBF;u c&oacute; m&#x1ED9;t &dstrok;i&#x1EC1;u anh mu&#x1ED1;n gi&#x1EEF; m&atilde;i tr&ecirc;n &dstrok;&#x1EDD;i, th&igrave; &dstrok;&oacute; ch&iacute;nh l&agrave; n&#x1EE5; c&#x1B0;&#x1EDD;i c&#x1EE7;a em. V&igrave; m&#x1ED7;i khi em c&#x1B0;&#x1EDD;i, c&#x1EA3; th&#x1EBF;
+    |             gi&#x1EDB;i trong anh &dstrok;&#x1EC1;u s&aacute;ng l&ecirc;n.
+  .video-box
+    video#loveVideo(controls='' poster='')
+      source(src='your-video.mp4' type='video/mp4')
+      |                 Tr&igrave;nh duy&#x1EC7;t kh&ocirc;ng h&#x1ED7; tr&#x1EE3; video.
+  .controls
+    button#playBtn.btn &#x1F3B5; Ph&aacute;t nh&#x1EA1;c
+    button#stopBtn.btn &#x23F8; D&#x1EEB;ng
+    button#voiceBtn.btn &#x1F399; Voice
+audio#bgMusic(src='your-music.mp3')
+audio#voice(src='your-voice.mp3')
+script.
+  const music = document.getElementById('bgMusic');
+  const voice = document.getElementById('voice');
+  const playBtn = document.getElementById('playBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const voiceBtn = document.getElementById('voiceBtn');
+  // Phát nhạc
+  playBtn.addEventListener('click', () => {
+  music.play();
+  spawnNotes();
+  });
+  // Dừng nhạc
+  stopBtn.addEventListener('click', () => {
+  music.pause();
+  music.currentTime = 0;
+  });
+  // Phát voice
+  voiceBtn.addEventListener('click', () => {
+  voice.play();
+  });
+  // Tạo hiệu ứng nốt nhạc
+  function spawnNotes() {
+  const symbols = ['🎵', '🎶', '🎼', '💗'];
+  for (let i = 0; i < 8; i++) {
+  const note = document.createElement('div');
+  note.className = 'note';
+  note.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+  note.style.left = Math.random() * 90 + '%';
+  note.style.bottom = '10px';
+  note.style.animationDuration = 3 + Math.random() * 2 + 's';
+  document.body.appendChild(note);
+  setTimeout(() => note.remove(), 5000);
+  }
+  }
+  const messageBox = document.getElementById('message');
+  const fullText = messageBox.innerText.trim(); // Lấy nội dung gốc
+  messageBox.innerText = ''; // Xóa để chuẩn bị hiệu ứng
+
+  let index = 0;
+  const speed = 35; // tốc độ gõ (ms/1 ký tự) — có thể chỉnh chậm hơn (50-80)
+
+  function typeEffect() {
+    if (index < fullText.length) {
+        messageBox.innerHTML += fullText.charAt(index);
+        index++;
+        messageBox.scrollTop = messageBox.scrollHeight; // cuộn xuống khi text dài
+        setTimeout(typeEffect, speed);
+    }
+ }
+
+    // Chạy hiệu ứng sau khi trang tải xong
+  window.addEventListener('load', () => {
+    setTimeout(typeEffect, 800); // delay 0.8s trước khi bắt đầu
+ });
